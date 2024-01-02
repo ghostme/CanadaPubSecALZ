@@ -1,0 +1,76 @@
+# ----------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
+# EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES 
+# OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+# ----------------------------------------------------------------------------------
+
+# Environment YAML files can be used to supplement
+# the variables specified in 'config/variables/common.yml'. You can:
+#   * Override existing common-vars.yml variable value settings, and
+#   * Create new variable values not present in common-vars.yml
+#
+# The naming convention for these YAML files is:
+#   {organization}-{branch}.yml
+#
+# where {organization} is the organization variable from the
+#         common.yml file
+# and   {branch} is the Azure Repos branch name used by the
+#         currently executing pipeline.
+
+variables:
+  # # Management Groups
+  # var-parentManagementGroupId:  27184116-c4a5-4271-9c3a-fd4db32e51f3 #59be3f3f-69f1-4a70-8dc6-a711f0432c80
+  # var-topLevelManagementGroupName: shols
+# Management Groups (modern)
+  var-managementgroup-hierarchy: >
+    {
+      "name": "Tenant Root Group",
+      "id": "27184116-c4a5-4271-9c3a-fd4db32e51f3",
+      "children": [
+        {
+          "name": "Azure Landing Zones for Canadian Public Sector",
+          "id": "shols",
+          "children": [
+            {
+              "name": "Platform", "id": "sholsPlatform",
+              "children": [
+                { "name": "Identity", "id": "sholsPlatformIdentity", "children": [] },
+                { "name": "Connectivity", "id": "sholsPlatformConnectivity", "children": [] },
+                { "name": "Management", "id": "sholsPlatformManagement", "children": [] }
+              ]
+            },
+            {
+              "name": "LandingZones", "id": "sholsLandingZones",
+              "children": [
+                { "name": "DevTest", "id": "sholsLandingZonesDevTest", "children": [] },
+                { "name": "QA", "id": "sholsLandingZonesQA", "children": [] },
+                { "name": "Prod", "id": "sholsLandingZonesProd", "children": [] }
+              ]
+            },
+            {
+              "name": "Sandbox", "id": "sholsSandbox",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+
+  # Logging
+  var-logging-region: canadacentral
+  var-logging-managementGroupId: sholsPlatform
+  var-logging-subscriptionId:  5dadffd8-5480-4472-a3bc-524edbd78847
+  var-logging-configurationFileName: logging.parameters.json
+  var-logging-diagnosticSettingsforNetworkSecurityGroupsStoragePrefix: sholsnsg001
+
+  # Hub Networking
+  var-hubnetwork-region: $(deploymentRegion)
+  var-hubnetwork-managementGroupId: sholsPlatformConnectivity
+  var-hubnetwork-subscriptionId: 2230d216-d19a-4144-ba8f-bb30eab134dd
+
+ ## Hub Network configuration using Azure Firewall - required when Azure Firewall is used
+  var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
+  var-hubnetwork-azfw-configurationFileName: hub-azfw/hub-network.parameters.json
